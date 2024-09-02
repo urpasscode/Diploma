@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <title>Главная</title>
+  </head>
+  <body>
+      <div class="all d-flex justify-content-center">
+          <nav class="navbar navbar-expand-lg bg-white shadow-lg p-1 mb-5 mt-3 bg-body rounded w-75 font-family-sans-serif fs-5">
+              <div class="container-fluid">
+                  <button class="navbar-toggler"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#navbarNav">
+                      <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarNav">
+                      <ul class="navbar-nav mb-2 mb-lg-0">
+                          <li class="nav-item">
+                              <a class="nav-link active text-decoration-underline"
+                                 href="/Main/">Главная</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" href="/ContactPage/">Контакты</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" href="../note.html">Заметки</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" href="../tag.html">Теги</a>
+                          </li>
+                      </ul>
+                  </div>
+                  <span class="m-3"><img src="../img/clock.svg" /></span>
+                  <div class="lk_btn text-center p-1 w-25 h-25">
+                      <input id="lk_button"
+                             class="lk w-75 h-75"
+                             type="submit"
+                             style="color: white; background-color: #ad00ff"
+                             value="Личный кабинет" />
+                  </div>
+              </div>
+          </nav>
+      </div>
+      <div class="container">
+          <div class="row d-flex flex-row justify-content-center m-auto">
+              <div class="col-12 col-sm-4 col-xl-4 title_block fs-1 d-flex justify-content-start">
+                  Недавние
+              </div>
+
+              <div class="col-6 col-sm-3 col-xl-4 d-flex justify-content-end">
+                  <input type="text" id="text_f" class="inp_find m-3 h-50" />
+              </div>
+              <div class="col-6 col-sm-3 col-xl-4 lk_btn text-center p-1 fs-5 m-3">
+                  <input id="btn_find"
+                         class="h-75"
+                         type="submit"
+                         onclick="location.href='./index.html'"
+                         style="color: white; background-color: #ad00ff"
+                         value="Поиск" />
+              </div>
+          </div>
+
+
+
+          <div class="row dinamicBlocks justify-content-center m-auto">
+              <div class="row cont_block col-11 col-sm-3 col-xl-3 p-2 m-4 rounded"
+                   id="cont_1"
+                   style="background-color: #ffcc7f; cursor: pointer">
+                  <div class="col p-1 contact_img rounded">
+                      <img class="rounded shadow-lg"
+                           src="../img/person.png"
+                           alt="photo"
+                           style="width: 125px; height: 125px" />
+                  </div>
+                  <div class="col p-1">
+                      <div class="contact_name fw-bold"
+                           style="font-size: 120%; line-height: 90%">
+                          Шепелев Марк Иванович
+                      </div>
+                      <div class="contact_date mt-3" style="font-size: small">
+                          <img src="../img/cont_birth.svg" class="" /> 13.09.2001
+                      </div>
+                      <div class="contact_phone" style="font-size: small">
+                          <img src="../img/cont_phone.svg" class="" />89374448859
+                      </div>
+                  </div>
+                  <div class="col p-1 ps-3">
+                      <div class="rounded-pill justify-content-end"
+                           style="background-color: #ad00ff; width: 20px; height: 20px"></div>
+                  </div>
+              </div>
+          </div>
+
+
+      </div>
+      <script>
+          // Function to change button value
+          function changeButtonValue() {
+              const lk_button = document.getElementById("lk_button");
+              if (window.innerWidth < 1140) {
+                  lk_button.value = "ЛК";
+              } else {
+                  lk_button.value = "Личный кабинет";
+              }
+          }
+          window.addEventListener("resize", changeButtonValue);
+          changeButtonValue();
+          async function getUser() {
+              // отправляет запрос и получаем ответ
+              const response = await fetch("/User/GetUserData", {
+                  method: "GET",
+                  headers: { "Accept": "application/json" }
+              });
+              // если запрос прошел нормально
+              if (response.ok === true) {
+                  // получаем данные
+                  const user = await response.json();
+                  console.log(user);
+                  CreateContactHtml(user);
+              }
+          }
+
+
+          function CreateContactHtml(part) {
+              let parent = document.querySelector('dinamicBlocks');
+              let div = document.createElement('div');
+              div.className = 'row cont_block col-11 col-sm-3 col-xl-3 p-2 m-4 rounded';
+              div.id = `note_${part.elem_id}`;
+              div.style = "background-color: #ffcc7f; cursor: pointer";
+
+              let elemBlock =
+                  '<div class="col p-1 contact_img rounded">' +
+                  '<img class="rounded shadow-lg" src="../img/person.png" alt="photo" style="width: 125px; height: 125px" />' +
+                  '</div>' +
+                  '<div class="col p-1">' +
+                  `<div class="contact_name fw-bold" style="font-size: 120%; line-height: 90%"> ${part.fio} </div>` +
+                  `<div class="contact_date mt-3" style="font-size: small"><img src="../img/cont_birth.svg" class="" /> ${part.cont_birth} </div>` +
+                  `<div class="contact_phone" style="font-size: small"><img src="../img/cont_phone.svg" class="" /> ${part.phoneNumbers[0]} </div>` +
+                  '</div>';
+
+
+              div.innerHTML = elemBlock;
+              parent.appendChild(div);
+              //AddOnClickEvents();
+          }
+      </script>
+      <script src="/js/AccountReq.js"></script>
+  </body>
+</html>
